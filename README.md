@@ -2,11 +2,11 @@
 
 Этот репозиторий содержит скрипт обучения KMeans на спарке и все необходимые зависимости и инструкции для запуска.
 
-**Проекты**: `kmeans.py` (KMeans на OpenFoodFacts CSV), `wordcount.py` (простая обработка текста), `knn.py` (KNN на OpenFoodFacts CSV),
+**Проекты**: `kmeans.py` (KMeans на OpenFoodFacts CSV), `wordcount.py` (простая обработка текста),
 
 **Quick Start**
 
-1. Установить зависимости (опционально, если вы запускаете через `spark-submit` это не обязательно):
+1. Установить зависимости и подготовить данные:
 
 ```bash
 python3 -m venv .venv
