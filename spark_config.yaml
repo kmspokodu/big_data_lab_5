@@ -1,0 +1,12 @@
+# Конфигурация для спарк-сессии
+spark:
+
+  app:
+
+    name: lab5_app
+
+  executor:
+
+    memory: 4g
+
+    cores: 4

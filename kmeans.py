@@ -2,12 +2,18 @@ from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler, StandardScaler
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.evaluation import ClusteringEvaluator
+import yaml
 
+with open("spark_config.yaml", "r") as f:
+    config = yaml.safe_load(f)
 
 spark = SparkSession.builder \
-    .appName("OpenFoodFacts-KMeans") \
+    .appName(config["spark"]["app"]["name"]) \
+    .config("spark.executor.memory", config["spark"]["executor"]["memory"]) \
+    .config("spark.executor.cores", config["spark"]["executor"]["cores"]) \
     .master("local[*]") \
     .getOrCreate()
+
 
 
 df = spark.read.csv(
@@ -17,7 +23,7 @@ df = spark.read.csv(
     inferSchema=True
 )
 
-
+# Выбираю только числовые признаки для корректной кластеризации
 features = [
     "energy-kcal_100g",
     "fat_100g",
@@ -30,6 +36,7 @@ features = [
 df = df.select(features)
 df = df.dropna()
 
+# Фильтрую выбросы по разумным границам для каждого признака
 df = df.filter("""
     `energy-kcal_100g` >= 0 AND `energy-kcal_100g` <= 1000 AND
     fat_100g >= 0 AND fat_100g <= 100 AND
@@ -40,7 +47,7 @@ df = df.filter("""
 """)
 
 
-df = df.sample(fraction=0.02, seed=42)
+df = df.sample(fraction=0.05, seed=42)
 
 print("Final dataset size:", df.count())
 

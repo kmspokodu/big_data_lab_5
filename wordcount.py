@@ -1,9 +1,17 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, split
+import yaml
+
+with open("spark_config.yaml", "r") as f:
+    config = yaml.safe_load(f)
 
 spark = SparkSession.builder \
-    .appName("WordCount") \
+    .appName(config["spark"]["app"]["name"]) \
+    .config("spark.executor.memory", config["spark"]["executor"]["memory"]) \
+    .config("spark.executor.cores", config["spark"]["executor"]["cores"]) \
+    .master("local[*]") \
     .getOrCreate()
+
 
 # читаем текст
 df = spark.read.text("input.txt")
